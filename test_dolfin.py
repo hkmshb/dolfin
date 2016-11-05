@@ -61,5 +61,66 @@ class CommandTest(unittest.TestCase):
         )
 
 
+class StorageTest(unittest.TestCase):
+
+    def test_storage_is_instance_of_dict(self):
+        s = dolfin.Storage()
+        self.assertIsInstance(s, dict)
+
+    def test_can_access_element_using_dot_notation(self):
+        foo = dolfin.Storage()
+        foo['bar'] = 'baz-qux-norf'
+        self.assertEqual('baz-qux-norf', foo.bar)
+
+    def test_can_set_element_using_dot_notation(self):
+        foo = dolfin.Storage()
+        foo.bar = 'baz-qux-norf'
+        self.assertEqual('baz-qux-norf', foo['bar'])
+
+    def test_access_using_unknown_member_returns_None(self):
+        foo = dolfin.Storage()
+        self.assertIsNone(foo.bar)
+
+    def test_access_using_missing_key_returns_None(self):
+        foo = dolfin.Storage()
+        self.assertIsNone(foo['bar'])
+
+    def test_can_be_pickled_and_unpickled(self):
+        import pickle
+
+        foo = dolfin.Storage(bar='baz')
+        out = pickle.dumps(foo)
+        self.assertIsNotNone(out)
+        
+        qux = pickle.loads(out)
+        self.assertEqual('baz', qux.bar)
+
+    def test_has_friendly_string_representation(self):
+        foo = dolfin.Storage(bar='baz')
+        self.assertTrue(repr(foo).startswith('<Storage'))
+    
+    def test_make_not_given_dict_or_sequence_throws(self):
+        self.assertRaises(ValueError, dolfin.Storage.make, 'foo')
+
+    def test_can_make_storage_from_dict(self):
+        obj = dolfin.Storage.make(dict(foo='bar'))
+        self.assertIsInstance(obj, dolfin.Storage)
+        self.assertEqual('bar', obj.foo)
+
+    def test_can_make_storage_from_nested_dicts(self):
+        obj = dolfin.Storage.make(dict(
+            baz = dict(
+                quux = 'norf',
+                meta = dict(
+                    name = 'simple.conf',
+                    path = r'c:\path\to\conf',
+                )
+            )
+        ))
+        self.assertIsInstance(obj, dolfin.Storage)
+        self.assertIsInstance(obj.baz, dolfin.Storage)
+        self.assertIsInstance(obj.baz.meta, dolfin.Storage)
+
+
 if __name__ == '__main__':
     unittest.main()
