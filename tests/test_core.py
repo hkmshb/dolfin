@@ -1,6 +1,3 @@
-"""
-Defines unit tests for dolfin.
-"""
 import os
 import sys
 import unittest
