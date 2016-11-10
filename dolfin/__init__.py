@@ -7,7 +7,7 @@ Copyright (c) 2014, Hazeltek Solutions.
 """
 
 __author__  = 'Hazeltek Solutions'
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 # expose significant functions and classes defined within the core module
